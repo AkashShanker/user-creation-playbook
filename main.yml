@@ -13,7 +13,7 @@
       command: wbinfo --group-info {{ item.Groups }}
       register: check_ad_output
       failed_when: "'WBC_ERR_DOMAIN_NOT_FOUND' in check_ad_output.stdout"
-      
+      loop: "{{ item.Groups }}"
     - name: display user_list data
       debug:
        var: user_list.list
