@@ -1,0 +1,24 @@
+---
+- name: create users from csv file
+  hosts: localhost
+  
+  tasks:
+    - name: reading the csv file
+      read_csv:
+       path: user-create.csv
+      register: user_list
+      delegate_to: localhost
+    
+    - name: check if groups already exist or not
+      command: wbinfo --group-info {{ item.Groups }}
+      register: check_ad_output
+      failed_when: "'WBC_ERR_DOMAIN_NOT_FOUND' in check_ad_output.stdout"
+      
+    - name: display user_list data
+      debug:
+       var: user_list.list
+       
+    - name: extract Username from all dictionaries
+      debug:
+       msg: "{{ item.Username }}"
+      loop: "{{ user_list.list }}"
