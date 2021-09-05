@@ -19,6 +19,12 @@
       register: user_fullname
       args:
         warn: no
+      loop: "{{ user_list.list }}"
+
+    - name: Display full passwd line
+      debug:
+        msg: {{ passwd_line }}
+      loop: "{{ user_list.list }}"
       
     - name: check if groups already exist or not
       command: wbinfo --group-info {{ item.Groups }}
