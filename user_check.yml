@@ -1,0 +1,55 @@
+---
+- name: create users from csv file
+  hosts: localhost
+  
+  tasks:
+    - name: reading the csv file
+      read_csv:
+       path: user-create.csv
+      register: user_list
+      delegate_to: localhost
+    
+    - name: Generate line
+      command: wbinfo -i {{ item.Username }}
+      register: passwd_line
+      loop: "{{ user_list.list }}"
+
+    - name: Find full name of user
+      shell: ldapsearch -L -xxx uid={{ item.Username }} | grep ^displayName: | sed 's/displayName: //' | uniq
+      register: user_fullname
+      args:
+        warn: no
+      
+    - name: check if groups already exist or not
+      command: wbinfo --group-info {{ item.Groups }}
+      register: check_ad_output
+      failed_when: "'WBC_ERR_DOMAIN_NOT_FOUND' in check_ad_output.msg"
+      loop: "{{ user_list.list }}"
+    
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    # - name: display user_list data
+    #   debug:
+    #    var: user_list.list
+    
+    # - name: display error msg
+    #   debug:
+    #     var: check_ad_output.results[0].msg
+       
+    # - name: extract Username from all dictionaries
+    #   debug:
+    #    msg: "{{ item.Username }}"
+    #   loop: "{{ user_list.list }}"
