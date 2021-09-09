@@ -15,7 +15,7 @@
       loop: "{{ user_list.list }}"
 
     - name: Find full name of user
-      shell: ldapsearch -L -xxx uid={{ item.Username }} | grep ^displayName: | sed 's/displayName: //' | uniq
+      shell: "ldapsearch -L -xxx uid={{ item.Username }} | grep ^displayName: | sed 's/displayName: //' | uniq"
       register: user_fullname
       args:
         warn: no
@@ -25,7 +25,7 @@
       debug:
         msg: {{ passwd_line }}
       loop: "{{ user_list.list }}"
-      
+
     - name: check if groups already exist or not
       command: wbinfo --group-info {{ item.Groups }}
       register: check_ad_output
