@@ -1,14 +1,14 @@
 ---
 - name: create users from csv file
   hosts: admin_node
-  
+
   tasks:
     - name: reading the csv file
       read_csv:
-       path: user-create.csv
+        path: user-create.csv
       register: user_list
       delegate_to: localhost
-    
+
     - name: Generate line
       command: wbinfo -i {{ item.Username }}
       register: passwd_line
@@ -18,7 +18,7 @@
       shell: "ldapsearch -L -xxx uid={{ item.Username }} | grep ^displayName: | sed 's/displayName: //' | uniq"
       register: user_fullname
       args:
-        warn: no
+        warn: false
       loop: "{{ user_list.list }}"
 
     - name: Display full passwd line
@@ -29,38 +29,8 @@
     - name: check if groups already exist or not
       command: wbinfo --group-info {{ item.Groups }}
       register: check_ad_output
-      # failed_when: "'WBC_ERR_DOMAIN_NOT_FOUND' in check_ad_output.msg"
       loop: "{{ user_list.list }}"
 
     - name: Display AD output
       debug:
         msg: "{{ check_ad_output }}"
-  
-    
-      
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    # - name: display user_list data
-    #   debug:
-    #    var: user_list.list
-    
-    # - name: display error msg
-    #   debug:
-    #     var: check_ad_output.results[0].msg
-       
-    # - name: extract Username from all dictionaries
-    #   debug:
-    #    msg: "{{ item.Username }}"
-    #   loop: "{{ user_list.list }}"
