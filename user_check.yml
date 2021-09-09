@@ -13,6 +13,8 @@
       command: wbinfo -i {{ item.Username }}
       register: passwd_line
       loop: "{{ user_list.list }}"
+      changed_when: False
+      ignore_errors: True
 
     - name: Find full name of user
       shell: "ldapsearch -L -xxx uid={{ item.Username }} | grep ^displayName: | sed 's/displayName: //' | uniq"
@@ -20,16 +22,22 @@
       args:
         warn: false
       loop: "{{ user_list.list }}"
+      changed_when: False
+      ignore_errors: True
 
     - name: Display full passwd line
       debug:
         msg: "{{ passwd_line }}"
       loop: "{{ user_list.list }}"
+      changed_when: False
+      ignore_errors: True
 
     - name: check if groups already exist or not
       command: wbinfo --group-info {{ item.Groups }}
       register: check_ad_output
       loop: "{{ user_list.list }}"
+      changed_when: False
+      ignore_errors: True
 
     - name: Fail if group does not exist in AD
       fail:
