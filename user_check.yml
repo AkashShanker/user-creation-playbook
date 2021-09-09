@@ -25,6 +25,11 @@
       become: yes
       changed_when: false
       failed_when: user_fullname.stderr != ''
+    
+    - name: Display fullname for user
+      debug:
+        msg: "{{ user_fullname }}"
+      loop: "{{ user_list.list }}"
 
     - name: Display full passwd line
       debug:
