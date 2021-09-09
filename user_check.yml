@@ -41,4 +41,4 @@
 
     - name: Fail if group does not exist in AD
       debug: var=check_ad_output.stderr_lines
-      when: "'WBC_ERR_DOMAIN_NOT_FOUND' in {{ check_ad_output.stderr_lines }}"
+      when: "'WBC_ERR_DOMAIN_NOT_FOUND' in check_ad_ouput"
