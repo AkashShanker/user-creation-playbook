@@ -40,6 +40,5 @@
       ignore_errors: True
 
     - name: Fail if group does not exist in AD
-      fail:
-        msg: "{{ check_ad_output.stderr }}"
+      debug: var=check_ad_output.stderr_lines
       when: "'WBC_ERR_DOMAIN_NOT_FOUND' in check_ad_output.stderr_lines"
