@@ -1,6 +1,6 @@
 ---
 - name: create users from csv file
-  hosts: localhost
+  hosts: admin_node
   
   tasks:
     - name: reading the csv file
