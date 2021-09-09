@@ -23,7 +23,7 @@
 
     - name: Display full passwd line
       debug:
-        msg: {{ passwd_line }}
+        msg: "{{ passwd_line }}"
       loop: "{{ user_list.list }}"
 
     - name: check if groups already exist or not
@@ -31,6 +31,10 @@
       register: check_ad_output
       failed_when: "'WBC_ERR_DOMAIN_NOT_FOUND' in check_ad_output.msg"
       loop: "{{ user_list.list }}"
+
+    - name: Display AD output
+      debug:
+        msg: "{{ check_ad_output }}"
     
       
 
