@@ -31,6 +31,7 @@
       register: check_ad_output
       loop: "{{ user_list.list }}"
 
-    - name: Display AD output
-      debug:
-        msg: "{{ check_ad_output }}"
+    - name: Fail if group does not exist in AD
+      fail:
+        msg: "{{ check_ad_output.stderr }}"
+      when: "'WBC_ERR_DOMAIN_NOT_FOUND' in check_ad_output.stderr"
